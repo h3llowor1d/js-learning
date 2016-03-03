@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>分割线左右移动</title>
+    <script src="../jquery/jquery.js"></script>
+    <script src="./js/index.js"></script>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+
+        .header {
+            height: 50px;
+            width: 100%;
+            background-color: #3182bd
+        }
+
+        .footer {
+            height: 50px;
+            width: 100%;
+            background-color: #3182bd
+        }
+
+        .main {
+            font-size: 0;
+            margin: 0 auto;
+            width: 1200px;
+            height: 800px;
+        }
+
+        .main div {
+            font-size: 12px;
+            display: inline-block;
+            vertical-align: top;
+            box-sizing: border-box;
+            -moz-box-sizing: border-box; /* Firefox */
+            -webkit-box-sizing: border-box; /* Safari */
+        }
+
+        .left {
+            width: 18%;
+            background-color: #e6550d;
+            height: 100%
+        }
+
+        .right {
+            width: 80%;
+            height: 100%;
+            background-color: antiquewhite
+        }
+
+        .line {
+            text-align:center;
+            cursor: ew-resize;
+            min-width: 2px;
+            width: 2%;
+            height: 100%;
+        }
+
+        .line div{
+            width: 2px;
+            background:#90AFCB;
+            overflow: hidden;
+            height: 100%;
+        }
+    </style>
+
+    <script>
+        jQuery(document).ready(function(){
+            var $main = jQuery('.main');
+            var $line = jQuery('.line'); //jQury 对象
+            var resizeDiv = $line[0]; //dom 对象
+            var _drag = false;
+            $line.on('mousedown', function (e) {
+                _drag = true;
+                var disX = e.clientX;
+                var lw = jQuery('.left').width();
+                var rw = jQuery('.right').width();
+                $main.on('mousemove', function (e1) {
+                    if (_drag) {
+                        var iT = e1.clientX - disX;
+                        jQuery('.left').width(lw + iT);
+                        jQuery('.right').width(rw - iT);
+                    }
+                    console.log('mousemove', new Date().getTime());
+                    return false;
+                });
+
+                $main.on('mouseup', function () {
+                    console.log('mouseup', new Date().getTime());
+                    $main.unbind('mousemove mouseup');
+                    this.releaseCapture && this.releaseCapture();
+                    _drag = false;
+                    return false;
+                });
+
+                $main.on('mouseleave', function () {
+                    console.log('mouseleave', new Date().getTime());
+                    $main.unbind('mousemove mouseup');
+                    _drag = false;
+                    this.releaseCapture && this.releaseCapture();
+                    return false;
+                });
+
+                this.setCapture && this.setCapture();
+                return false;
+            });
+        });
+
+    </script>
+</head>
+<body>
+<div class="header"><h1>This is header</h1></div>
+<div class="main">
+    <div class="left"><h1>LEFT</h1></div>
+    <div class="line"><div></div></div>
+    <div class="right"><h1>RIGHT</h1>
+        <img src="hkc-100x100.png">
+    </div>
+</div>
+<div class="footer"><h1>This is footer</h1></div>
+</body>
+</html>
